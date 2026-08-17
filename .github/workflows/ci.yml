@@ -1,0 +1,53 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22, 23, 24]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Guard — runtime sources must not import from 'next'
+        run: |
+          if grep -nE "from ['\"]next" src/index.ts src/next.ts; then
+            echo "::error::Runtime sources must stay free of 'next' imports (zero-dependency invariant)."
+            exit 1
+          fi
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test (with coverage thresholds)
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Validate package exports (publint + arethetypeswrong)
+        run: pnpm check:exports
+
+      - name: Show publishable contents
+        run: npm pack --dry-run

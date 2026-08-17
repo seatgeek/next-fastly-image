@@ -1,0 +1,25 @@
+# Defensive denylist. The package.json "files" allowlist (["dist"]) is the
+# source of truth for tarball contents; this file is belt-and-suspenders so
+# repo files can never leak into the published package.
+src/
+coverage/
+node_modules/
+docs/
+.github/
+.changeset/
+*.test.ts
+*.tgz
+*.log
+tsconfig.json
+tsup.config.ts
+vitest.config.ts
+biome.json
+mise.toml
+Makefile
+.editorconfig
+.gitignore
+.npmrc
+pnpm-lock.yaml
+AGENTS.md
+CLAUDE.md
+.DS_Store

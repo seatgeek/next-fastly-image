@@ -1,0 +1,41 @@
+# Release workflow — intentionally double-gated:
+#   1. It only ever runs on a manual `workflow_dispatch` (merging to main never publishes).
+#   2. The publish job targets the `npm-publish` GitHub Environment, which must be
+#      created with required reviewers before this can run. The NPM_TOKEN secret
+#      lives in that environment, not at repo level.
+# The changesets "version PR" flow is run locally (`pnpm changeset version`) or can
+# be added as a separate non-publishing workflow later.
+name: release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # npm provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Quality gates
+        run: pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm check:exports
+
+      - name: Publish to npm (with provenance)
+        run: pnpm publish --access public --provenance --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
