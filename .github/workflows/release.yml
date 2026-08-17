@@ -1,6 +1,9 @@
-# Release workflow — intentionally double-gated:
+# Release workflow — intentionally gated four ways:
 #   1. It only ever runs on a manual `workflow_dispatch` (merging to main never publishes).
-#   2. The publish job targets the `npm-publish` GitHub Environment, which must be
+#   2. Dispatches from any ref other than `main` fail immediately.
+#   3. A release-readiness guard refuses to publish the 0.0.0 placeholder version or a
+#      tree with unconsumed changesets (i.e. `pnpm changeset version` was never run).
+#   4. The publish job targets the `npm-publish` GitHub Environment, which must be
 #      created with required reviewers before this can run. The NPM_TOKEN secret
 #      lives in that environment, not at repo level.
 # The changesets "version PR" flow is run locally (`pnpm changeset version`) or can
@@ -19,6 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: npm-publish
     steps:
+      - name: Guard — releases only from main
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "::error::Releases must be dispatched from main (got ${{ github.ref }})."
+          exit 1
+
       - uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v4
@@ -31,6 +40,20 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Guard — version must be release-ready
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if [ "$version" = "0.0.0" ]; then
+            echo "::error::package.json is still at the 0.0.0 placeholder — run 'pnpm changeset version' first."
+            exit 1
+          fi
+          pending="$(find .changeset -name '*.md' ! -name 'README.md' | wc -l | tr -d ' ')"
+          if [ "$pending" != "0" ]; then
+            echo "::error::$pending unconsumed changeset(s) present — run 'pnpm changeset version' and commit before releasing."
+            exit 1
+          fi
+          echo "Releasing version $version"
 
       - name: Quality gates
         run: pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm check:exports
