@@ -65,7 +65,7 @@ Releases use [changesets](https://github.com/changesets/changesets):
 
 1. Include a changeset with your PR: `pnpm changeset` (pick bump level, write a summary - it becomes the CHANGELOG entry).
 2. Maintainers run `pnpm changeset version` to bump the version and CHANGELOG.
-3. **Merging to `main` never publishes.** Publishing happens only through the manually triggered `release` workflow (`workflow_dispatch`), which is additionally gated behind the `npm-publish` GitHub Environment (required reviewers) where the `NPM_TOKEN` secret lives. Run the smoke test above first.
+3. **Merging to `main` never publishes.** Publishing happens only through the manually triggered `release` workflow (`workflow_dispatch`), which additionally refuses to run from any ref but `main`, refuses the `0.0.0` placeholder version or a tree with unconsumed changesets (i.e. step 2 was skipped), and is gated behind the `npm-publish` GitHub Environment (required reviewers) where the `NPM_TOKEN` secret lives. Run the smoke test above first.
 
 ## Code of conduct
 
