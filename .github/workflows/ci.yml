@@ -13,7 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20, 22, 23, 24]
+        # The two supported LTS lines (matches the engines floor of >=22).
+        node-version: [22, 24]
     steps:
       - uses: actions/checkout@v4
 
@@ -75,7 +76,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
 
       - name: Install dependencies

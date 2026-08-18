@@ -4,13 +4,13 @@ Thanks for helping improve `@seatgeek/next-fastly-image`! This is a small, delib
 
 ## Setup
 
-Toolchain is pinned with [mise](https://mise.jdx.dev) (Node 20, pnpm 9):
+Toolchain is pinned with [mise](https://mise.jdx.dev) (Node 22, pnpm 9):
 
 ```sh
 make init   # mise install + pnpm install
 ```
 
-No mise? Any Node ≥ 20 with pnpm 9 works: `pnpm install`.
+No mise? Any Node ≥ 22 with pnpm 9 works: `pnpm install`.
 
 ## Development loop
 
