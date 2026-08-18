@@ -84,7 +84,8 @@ fastlyImageUrl("/img/a.png?t=123", { width: 640, auto: "webp" });
 | [API reference](./docs/api.md) | All exports, the full 29-option Fastly IO table, presets, restricted mode |
 | [Recipes](./docs/recipes.md) | Multiple loaders, `FastlyImage`, multi-CDN routing, dedicated image hosts |
 | [Next.js compatibility](./docs/nextjs-compatibility.md) | Version support, App Router notes, Next 16 `qualities`, `remotePatterns` |
-| [Contributing](./docs/CONTRIBUTING.md) | Setup, quality gates, smoke test, release process |
+| [Contributing](./docs/CONTRIBUTING.md) | Setup, quality gates, smoke test |
+| [Releasing](./docs/RELEASING.md) | One-time setup, changesets flow, release guards, tagging |
 
 Package invariants (host-agnostic, 1:1 param naming, pure functions, zero deps) live in [AGENTS.md](./AGENTS.md) and are enforced by tests and CI.
 
