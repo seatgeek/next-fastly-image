@@ -51,3 +51,41 @@ jobs:
 
       - name: Show publishable contents
         run: npm pack --dry-run
+
+  # Verifies the "works with Next.js >= 13" claim: type-checks the loader
+  # contract (src/next-compat.test-d.ts) and runs the full test suite -
+  # including the FastlyImage render tests - against every supported major,
+  # so this matrix alone proves the claim. Next 13/14 require React 18;
+  # 15/16 run on 19. The 16 leg pins latest-of-major (the lockfile may lag).
+  # `pnpm add` mutates only the runner's workspace.
+  compat:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { next: "13", react: "18" }
+          - { next: "14", react: "18" }
+          - { next: "15", react: "19" }
+          - { next: "16", react: "19" }
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Pin Next.js ${{ matrix.next }} / React ${{ matrix.react }}
+        run: pnpm add -D next@${{ matrix.next }} react@${{ matrix.react }} react-dom@${{ matrix.react }} @types/react@${{ matrix.react }} @types/react-dom@${{ matrix.react }}
+
+      - name: Typecheck against Next.js ${{ matrix.next }} types
+        run: pnpm typecheck
+
+      - name: Test against Next.js ${{ matrix.next }} (coverage thresholds owned by the test job)
+        run: pnpm exec vitest run --coverage.enabled=false

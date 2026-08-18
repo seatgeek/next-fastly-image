@@ -20,7 +20,7 @@ It's the [Fastly snippet from the Next.js docs](https://nextjs.org/docs/pages/ap
 npm install @seatgeek/next-fastly-image   # or pnpm add / yarn add / bun add
 ```
 
-Node ≥ 20 for local development. Works with **Next.js ≥ 13**, both routers ([compatibility details](./docs/nextjs-compatibility.md)).
+Node ≥ 20 for local development. Works with **Next.js ≥ 13**, both routers - verified in CI against 13, 14, 15, and 16 ([compatibility details](./docs/nextjs-compatibility.md)).
 
 ## Quick start
 

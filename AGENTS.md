@@ -24,7 +24,7 @@ Instructions for AI coding agents (and a good summary for humans).
 
 - **Extend, don't redesign.** The core is deliberately tiny; new capability should be a new option key or a documented recipe, not an abstraction.
 - Sources of truth: the [Fastly IO parameter reference](https://www.fastly.com/documentation/reference/io/) for option names/values (fetch it - don't work from memory) and the [Next.js image docs](https://nextjs.org/docs/app/api-reference/components/image) for the loader contract.
-- Tests live next to sources (`src/*.test.ts`), run with vitest, and coverage thresholds are 100% - add tests with any behavior change.
+- Tests live next to sources (`src/*.test.ts`), run with vitest, and coverage thresholds are 100% - add tests with any behavior change. CI also runs a `compat` matrix (typecheck + full suite against next 13/14/15 with paired react versions) - loader-contract changes must stay compatible or the support claim must change with them.
 - Keep the published tarball minimal: `files: ["dist"]` is the allowlist; check with `npm pack --dry-run`.
 - Never publish. Releases are human-triggered (`workflow_dispatch` + `npm-publish` environment); merging to `main` must never publish.
 
