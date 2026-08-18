@@ -1,5 +1,11 @@
 # @seatgeek/next-fastly-image
 
+## 0.1.1
+
+### Patch Changes
+
+- No changes to the published code - release-pipeline improvements only: publishing now triggers automatically on `v*` tag pushes (with a tag/version match guard), GitHub Releases are created automatically from the CHANGELOG entry, and the release runbook documents npm's 2FA-bypass token deprecation and the trusted-publishing migration.
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@seatgeek/next-fastly-image",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Stateless, zero-dependency Fastly Image Optimizer loader for next/image — typed, host-agnostic, and tested.",
   "keywords": [
     "next",
