@@ -1,6 +1,6 @@
 # next-fastly-image
 
-[![CI](https://github.com/seatgeek/next-fastly-image/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/seatgeek/next-fastly-image/actions/workflows/ci.yml)
+[![CI](https://github.com/seatgeek/next-fastly-image/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/seatgeek/next-fastly-image/actions/workflows/ci.yml) [![nightly](https://github.com/seatgeek/next-fastly-image/actions/workflows/nightly.yml/badge.svg)](https://github.com/seatgeek/next-fastly-image/actions/workflows/nightly.yml)
 [![npm version](https://img.shields.io/npm/v/%40seatgeek%2Fnext-fastly-image)](https://www.npmjs.com/package/@seatgeek/next-fastly-image)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/%40seatgeek%2Fnext-fastly-image)](https://bundlephobia.com/package/@seatgeek/next-fastly-image)
 [![install size](https://packagephobia.com/badge?p=%40seatgeek%2Fnext-fastly-image)](https://packagephobia.com/result?p=%40seatgeek%2Fnext-fastly-image)
@@ -20,7 +20,7 @@ It's the [Fastly snippet from the Next.js docs](https://nextjs.org/docs/pages/ap
 npm install @seatgeek/next-fastly-image   # or pnpm add / yarn add / bun add
 ```
 
-Node ≥ 22 for local development. Works with **Next.js ≥ 13**, both routers - verified in CI against 13, 14, 15, and 16 ([compatibility details](./docs/nextjs-compatibility.md)).
+Node ≥ 22 for local development. Works with **Next.js ≥ 13**, both routers - verified in CI against 13, 14, 15, and 16, with `next@latest`/`next@canary` tracked by a nightly run ([compatibility details](./docs/nextjs-compatibility.md)).
 
 ## Quick start
 

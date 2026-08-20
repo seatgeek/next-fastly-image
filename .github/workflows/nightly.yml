@@ -1,0 +1,50 @@
+name: nightly
+
+# Early-warning canary: reruns the compat suite against the newest published
+# Next.js (latest + canary) so upstream breakage surfaces here, on a schedule,
+# instead of in a consumer's upgrade PR. Failures signal Next.js drift, not a
+# regression in this repo — main CI stays the merge gate.
+on:
+  schedule:
+    - cron: "23 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  next-edge:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        next-tag: [latest, canary]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # React majors move slower than Next; latest keeps peer ranges satisfied
+      # for both tags. `pnpm add` mutates only the runner's workspace.
+      - name: Pin next@${{ matrix.next-tag }} / react@latest
+        run: pnpm add -D next@${{ matrix.next-tag }} react@latest react-dom@latest @types/react@latest @types/react-dom@latest
+
+      - name: Report resolved versions
+        run: pnpm ls next react react-dom
+
+      - name: Typecheck against next@${{ matrix.next-tag }} types
+        run: pnpm typecheck
+
+      - name: Test against next@${{ matrix.next-tag }} (coverage thresholds owned by main CI)
+        run: pnpm exec vitest run --coverage.enabled=false
+
+      - name: Build
+        run: pnpm build
