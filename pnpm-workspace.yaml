@@ -1,0 +1,5 @@
+allowBuilds:
+  esbuild: true
+  # Pulled in by next >= 15 in the CI compat/nightly legs. Its native build
+  # is only needed to actually optimize images, which no test here does.
+  sharp: false
